@@ -19,7 +19,6 @@ Then open your browser to `http://localhost:8501` and enjoy the interactive UI! 
 .\.venv\Scripts\python.exe main.py --train-ticker GOOGL --test-ticker AMZN
 ```
 
-📖 **For detailed Streamlit UI guide, see [STREAMLIT_GUIDE.md](STREAMLIT_GUIDE.md)**
 
 ## 🎯 Features
 
