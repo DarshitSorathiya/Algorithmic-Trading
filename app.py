@@ -32,28 +32,23 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS
+# Clean, minimal CSS
 st.markdown("""
     <style>
-    .main {
-        padding: 0rem 1rem;
-    }
-    .stAlert {
-        margin-top: 1rem;
-    }
-    h1 {
-        color: #1f77b4;
-        padding-bottom: 1rem;
-    }
-    h2 {
-        color: #2ca02c;
+    /* Hide Streamlit branding */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    
+    /* Clean spacing */
+    .block-container {
         padding-top: 1rem;
+        max-width: 1400px;
     }
-    .metric-card {
-        background-color: #f0f2f6;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        margin: 0.5rem 0;
+    
+    /* Better button styling */
+    .stButton>button {
+        width: 100%;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -67,25 +62,26 @@ if 'results' not in st.session_state:
 def main():
     """Main application function"""
     
-    # Title and description
-    st.title("📈 Professional Trading Strategy Analysis System")
-    st.markdown("---")
+    # Simple header
+    st.title("📊 Trading Strategy Analyzer")
+    st.caption("Advanced technical analysis with machine learning")
+    st.divider()
     
     # Sidebar configuration
     with st.sidebar:
-        st.header("⚙️ Configuration")
+        st.header("Configuration")
         
         # Ticker selection
-        st.subheader("Stock Selection")
+        st.subheader("Stocks")
         train_ticker = st.text_input(
             "Training Ticker", 
             value="GOOGL",
-            help="Enter stock ticker for training data"
+            help="Stock for training"
         )
         test_ticker = st.text_input(
-            "Test Ticker", 
+            "Testing Ticker", 
             value="AMZN",
-            help="Enter stock ticker for testing"
+            help="Stock for testing"
         )
         
         # Date range
@@ -93,45 +89,42 @@ def main():
         col1, col2 = st.columns(2)
         with col1:
             start_date = st.date_input(
-                "Start Date",
+                "Start",
                 value=datetime(2023, 1, 1),
                 help="Analysis start date"
             )
         with col2:
             end_date = st.date_input(
-                "End Date",
-                value=datetime(2025, 12, 31),
-                help="Analysis end date"
+                "End",
+                value=datetime(2025, 12, 31)
             )
         
         # Trading parameters
-        st.subheader("Trading Parameters")
+        st.subheader("Trading")
         initial_capital = st.number_input(
             "Initial Capital ($)",
             min_value=1000,
             max_value=1000000,
             value=10000,
-            step=1000,
-            help="Starting capital for backtest"
+            step=1000
         )
         position_size = st.slider(
             "Position Size (%)",
             min_value=5,
             max_value=100,
             value=10,
-            step=5,
-            help="Percentage of capital per trade"
+            step=5
         )
         
         # Advanced options
-        with st.expander("🔧 Advanced Options"):
-            st.subheader("Technical Indicators")
-            macd_fast = st.number_input("MACD Fast Period", value=12, min_value=5, max_value=50)
-            macd_slow = st.number_input("MACD Slow Period", value=26, min_value=10, max_value=100)
+        with st.expander("Advanced Settings"):
+            st.write("**Indicators**")
+            macd_fast = st.number_input("MACD Fast", value=12, min_value=5, max_value=50)
+            macd_slow = st.number_input("MACD Slow", value=26, min_value=10, max_value=100)
             rsi_period = st.number_input("RSI Period", value=14, min_value=5, max_value=50)
             bb_period = st.number_input("BB Period", value=20, min_value=10, max_value=50)
             
-            st.subheader("Moving Averages")
+            st.write("**Moving Averages**")
             col_ma1, col_ma2 = st.columns(2)
             with col_ma1:
                 sma_short = st.number_input("SMA Short", value=20, min_value=5, max_value=100)
@@ -139,31 +132,20 @@ def main():
             with col_ma2:
                 ema_short = st.number_input("EMA Short", value=20, min_value=5, max_value=100)
                 ema_long = st.number_input("EMA Long", value=50, min_value=20, max_value=200)
-            kama_period = st.number_input("KAMA Period", value=100, min_value=50, max_value=200)
+            kama_period = st.number_input("KAMA", value=100, min_value=50, max_value=200)
             
-            st.subheader("Signal Generation")
+            st.write("**Signals**")
             swing_order = st.slider("Swing Order", 1, 10, 5)
             min_swing_pct = st.slider("Min Swing %", 0.5, 5.0, 2.0, 0.5)
         
-        st.markdown("---")
+        st.divider()
         
         # Run analysis button
-        run_button = st.button("🚀 Run Analysis", type="primary", width='stretch')
-        
-        st.markdown("---")
-        st.markdown("### 📊 About")
-        st.info("""
-        This system performs comprehensive technical analysis using:
-        - **Technical Indicators**: MACD, RSI, Bollinger Bands, ATR, KAMA
-        - **Pattern Detection**: Candlestick patterns, Swing points
-        - **Signal Generation**: Multi-factor trading signals
-        - **Backtesting**: Portfolio simulation
-        - **Machine Learning**: 8 ML models for prediction
-        """)
+        run_button = st.button("Run Analysis", type="primary", use_container_width=True)
     
     # Main content area
     if run_button:
-        with st.spinner("🔄 Running analysis... This may take a minute."):
+        with st.spinner("Running analysis..."):
             try:
                 # Store MA configuration in session state
                 st.session_state.ma_config = {
@@ -181,68 +163,17 @@ def main():
                 )
                 st.session_state.results = results
                 st.session_state.analysis_complete = True
-                st.success("✅ Analysis completed successfully!")
+                st.success("✓ Analysis complete! View results below.")
             except Exception as e:
-                st.error(f"❌ Error during analysis: {str(e)}")
+                st.error(f"Analysis failed: {str(e)}")
                 st.exception(e)
     
     # Display results if available
     if st.session_state.analysis_complete and st.session_state.results:
         display_results(st.session_state.results)
     else:
-        # Welcome screen
-        st.markdown("""
-        ## 👋 Welcome to the Trading Strategy Analyzer
-        
-        This professional-grade system combines **technical analysis**, **machine learning**, 
-        and **backtesting** to analyze trading strategies across different stocks.
-        
-        ### 🎯 Key Features:
-        
-        1. **📊 Technical Analysis**
-           - Multiple technical indicators (MACD, RSI, Bollinger Bands, ATR, KAMA)
-           - Candlestick pattern detection
-           - Swing high/low identification
-        
-        2. **🎲 Signal Generation**
-           - Multi-factor signal system
-           - Configurable entry/exit rules
-           - Risk management integration
-        
-        3. **💼 Backtesting**
-           - Realistic portfolio simulation
-           - Transaction cost modeling
-           - Performance metrics calculation
-        
-        4. **🤖 Machine Learning**
-           - 8 different ML models
-           - Automated feature engineering
-           - Model comparison and selection
-        
-        5. **📈 Visualization**
-           - Interactive Plotly charts
-           - Comprehensive analytics dashboard
-           - Trade analysis and metrics
-        
-        ### 🚀 Getting Started:
-        
-        1. Configure your analysis parameters in the sidebar
-        2. Click "Run Analysis" to start
-        3. Explore the results in the tabs below
-        
-        ---
-        """)
-        
-        # Sample metrics
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            st.metric("Supported Indicators", "10+")
-        with col2:
-            st.metric("ML Models", "8")
-        with col3:
-            st.metric("Pattern Types", "15+")
-        with col4:
-            st.metric("Metrics Tracked", "20+")
+        # Minimal welcome hint
+        st.caption("Set tickers and dates in the sidebar, then click ‘Run Analysis’.")
 
 def run_analysis(train_ticker, test_ticker, start_date, end_date, initial_capital, position_size):
     """Run the complete trading strategy analysis"""
@@ -550,7 +481,7 @@ def display_backtesting(results):
                 height=400,
                 hovermode='x unified'
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
         
         # Trade statistics
         if len(trades_df) > 0:
@@ -608,7 +539,7 @@ def display_backtesting(results):
                 height=400,
                 hovermode='x unified'
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
         
         # Trade statistics
         if len(trades_df) > 0:
@@ -685,7 +616,7 @@ def display_ml_results(results):
         yaxis_title="Actual",
         height=400
     )
-    st.plotly_chart(fig, width='stretch')
+    st.plotly_chart(fig, use_container_width=True)
     
     # Classification Report
     st.markdown("#### 📋 Classification Report")
@@ -717,48 +648,49 @@ def display_ml_results(results):
             height=500,
             yaxis={'categoryorder': 'total ascending'}
         )
-        st.plotly_chart(fig, width='stretch')
-    else:
-        st.info("Feature importance not available for this model type.")
+        st.plotly_chart(fig, use_container_width=True)
+    # Removed info message for models without feature importance
 
 def display_charts(results):
     """Display interactive charts"""
     
-    st.subheader("📉 Interactive TradingView-Style Charts")
+    st.markdown("### � Interactive Charts")
     
-    # Main indicator controls
-    st.markdown("**Main Chart Overlays:**")
-    col1, col2, col3, col4, col5 = st.columns(5)
-    with col1:
-        show_bb = st.checkbox("📊 Bollinger Bands", value=True)
-    with col2:
-        show_ma = st.checkbox("📈 Moving Averages", value=True)
-    with col3:
-        show_swings = st.checkbox("� Swing Points", value=True)
-    with col4:
-        show_patterns = st.checkbox("🕯️ Patterns", value=True)
-    with col5:
-        show_signals = st.checkbox("⚡ Signals", value=True)
-    
-    # Subplot and display controls
-    st.markdown("**Subplots & Display:**")
-    col6, col7, col8, col9, col10 = st.columns(5)
-    with col6:
-        show_volume = st.checkbox("📊 Volume", value=True)
-    with col7:
-        show_macd = st.checkbox("📈 MACD", value=True)
-    with col8:
-        show_rsi = st.checkbox("📉 RSI", value=True)
-    with col9:
-        chart_period = st.selectbox("Period", ["Last 100", "Last 200", "Last 500", "All"], index=1)
-    with col10:
-        chart_style = st.selectbox("Style", ["Dark", "Light"], index=0)
+    # Professional chart controls with better grouping
+    with st.container():
+        col_left, col_right = st.columns([3, 1])
+        
+        with col_left:
+            st.markdown("**Indicators & Overlays**")
+            col1, col2, col3, col4, col5 = st.columns(5)
+            with col1:
+                show_bb = st.checkbox("Bollinger Bands", value=True)
+            with col2:
+                show_ma = st.checkbox("Moving Averages", value=True)
+            with col3:
+                show_swings = st.checkbox("Swing Points", value=True)
+            with col4:
+                show_patterns = st.checkbox("Patterns", value=True)
+            with col5:
+                show_signals = st.checkbox("Trade Signals", value=True)
+            
+            col6, col7, col8, _, _ = st.columns(5)
+            with col6:
+                show_volume = st.checkbox("Volume", value=True)
+            with col7:
+                show_macd = st.checkbox("MACD", value=True)
+            with col8:
+                show_rsi = st.checkbox("RSI", value=True)
+        
+        with col_right:
+            st.markdown("**Display Options**")
+            chart_period = st.selectbox("Timeframe", ["Last 100", "Last 200", "Last 500", "All"], index=1, label_visibility="collapsed")
+            chart_style = st.selectbox("Theme", ["Dark", "Light"], index=0, label_visibility="collapsed")
     
     st.markdown("---")
-    st.markdown("**💡 Tip:** Scroll to zoom, drag to pan, double-click to reset, hover for details")
     
     # Price chart with signals
-    tab1, tab2 = st.tabs([f"📈 {results['train_ticker']}", f"📈 {results['test_ticker']}"])
+    tab1, tab2 = st.tabs([f"Training: {results['train_ticker']}", f"Testing: {results['test_ticker']}"])
     
     # Get MA configuration from session state or use defaults
     ma_config = st.session_state.get('ma_config', {
@@ -826,7 +758,7 @@ def create_advanced_tradingview_chart(df, ticker,
         )
     
     # Display chart
-    st.plotly_chart(fig, width='stretch')
+    st.plotly_chart(fig, use_container_width=True)
     
     # Chart statistics
     col1, col2, col3, col4 = st.columns(4)
@@ -983,7 +915,7 @@ def create_candlestick_chart(df, ticker):
     fig.update_yaxes(title_text="RSI", row=3, col=1)
     fig.update_yaxes(title_text="Volume", row=4, col=1)
     
-    st.plotly_chart(fig, width='stretch')
+    st.plotly_chart(fig, use_container_width=True)
 
 def display_trade_details(results):
     """Display detailed trade information"""
@@ -1143,7 +1075,7 @@ def display_tech_details(df, ticker):
                 yaxis_title="Count",
                 height=400
             )
-            st.plotly_chart(fig, width='stretch')
+            st.plotly_chart(fig, use_container_width=True)
         else:
             st.info("No candlestick patterns detected in this dataset.")
     else:
