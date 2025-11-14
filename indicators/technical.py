@@ -59,7 +59,7 @@ class TechnicalIndicators:
         return macd_line, signal_line, histogram
     
     @staticmethod
-    def calculate_kama(df: pd.DataFrame, period: int = 100, 
+    def calculate_kama(df: pd.DataFrame, period: int = 200, 
                        fast_ema: int = 2, slow_ema: int = 30) -> pd.Series:
         """
         Calculate Kaufman Adaptive Moving Average

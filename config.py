@@ -20,7 +20,7 @@ INDICATOR_PARAMS = {
         'signal': 9
     },
     'kama': {
-        'period': 100,
+        'period': 200,
         'fast_ema': 2,
         'slow_ema': 30
     },

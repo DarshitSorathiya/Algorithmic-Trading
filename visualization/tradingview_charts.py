@@ -19,7 +19,7 @@ class TradingViewChart:
         Args:
             df: DataFrame with OHLCV and indicator data
             title: Chart title
-            ma_config: Dict with MA periods {'sma_short': 20, 'sma_long': 50, 'ema_short': 20, 'ema_long': 50, 'kama': 100}
+            ma_config: Dict with MA periods {'sma_short': 20, 'sma_long': 50, 'ema_short': 20, 'ema_long': 50, 'kama': 200}
         """
         self.df = df.copy()
         self.title = title
@@ -36,7 +36,7 @@ class TradingViewChart:
             'sma_long': 50,
             'ema_short': 20,
             'ema_long': 50,
-            'kama': 100
+            'kama': 200
         }
     
     def create_chart(self, 
@@ -663,7 +663,7 @@ def create_advanced_chart(df: pd.DataFrame,
         show_swing_points: Show swing high/low markers
         show_patterns: Show candlestick pattern markers
         show_trade_signals: Show buy/sell signal arrows
-        ma_config: Dict with MA periods {'sma_short': 20, 'sma_long': 50, 'ema_short': 20, 'ema_long': 50, 'kama': 100}
+        ma_config: Dict with MA periods {'sma_short': 20, 'sma_long': 50, 'ema_short': 20, 'ema_long': 50, 'kama': 200}
         
     Returns:
         Plotly figure object

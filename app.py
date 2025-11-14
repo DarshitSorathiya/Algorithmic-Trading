@@ -153,7 +153,7 @@ def main():
             with col_ma2:
                 ema_short = st.number_input("EMA Short", value=20, min_value=5, max_value=100)
                 ema_long = st.number_input("EMA Long", value=50, min_value=20, max_value=200)
-            kama_period = st.number_input("KAMA", value=100, min_value=50, max_value=200)
+            kama_period = st.number_input("KAMA", value=200, min_value=50, max_value=200)
             
             st.write("**Signals**")
             swing_order = st.slider("Swing Order", 1, 10, 5)

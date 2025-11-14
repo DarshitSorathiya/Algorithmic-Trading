@@ -83,7 +83,7 @@ class InteractiveVisualizer:
         
         # KAMA
         fig.add_trace(go.Scatter(
-            x=df_plot.index, y=df_plot['KAMA_100'],
+            x=df_plot.index, y=df_plot['KAMA'],
             name='KAMA', line=dict(color='purple', width=2)
         ), row=1, col=1)
         
