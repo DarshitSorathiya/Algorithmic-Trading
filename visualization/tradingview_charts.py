@@ -24,11 +24,11 @@ class TradingViewChart:
         self.df = df.copy()
         self.title = title
         self.fig = None
-        self.show_patterns = True  # Default to showing patterns
-        self.show_bollinger = True
-        self.show_moving_avg = True
-        self.show_swing_points = True
-        self.show_trade_signals = True
+        self.show_patterns = False  # Default to hiding patterns
+        self.show_bollinger = False
+        self.show_moving_avg = False
+        self.show_swing_points = False
+        self.show_trade_signals = False
         
         # MA configuration with defaults
         self.ma_config = ma_config or {
@@ -640,14 +640,14 @@ class TradingViewChart:
 
 def create_advanced_chart(df: pd.DataFrame, 
                          title: str = "Trading Analysis",
-                         show_volume: bool = True,
-                         show_macd: bool = True,
-                         show_rsi: bool = True,
-                         show_bollinger: bool = True,
-                         show_moving_avg: bool = True,
-                         show_swing_points: bool = True,
-                         show_patterns: bool = True,
-                         show_trade_signals: bool = True,
+                         show_volume: bool = False,
+                         show_macd: bool = False,
+                         show_rsi: bool = False,
+                         show_bollinger: bool = False,
+                         show_moving_avg: bool = False,
+                         show_swing_points: bool = False,
+                         show_patterns: bool = False,
+                         show_trade_signals: bool = False,
                          ma_config: dict = None) -> go.Figure:
     """
     Convenience function to create advanced trading chart

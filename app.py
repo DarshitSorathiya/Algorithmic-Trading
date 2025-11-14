@@ -58,6 +58,27 @@ if 'analysis_complete' not in st.session_state:
     st.session_state.analysis_complete = False
 if 'results' not in st.session_state:
     st.session_state.results = {}
+# Initialize chart display options in session state
+if 'show_bb' not in st.session_state:
+    st.session_state.show_bb = False
+if 'show_ma' not in st.session_state:
+    st.session_state.show_ma = False
+if 'show_swings' not in st.session_state:
+    st.session_state.show_swings = False
+if 'show_patterns' not in st.session_state:
+    st.session_state.show_patterns = False
+if 'show_signals' not in st.session_state:
+    st.session_state.show_signals = False
+if 'show_volume' not in st.session_state:
+    st.session_state.show_volume = False
+if 'show_macd' not in st.session_state:
+    st.session_state.show_macd = False
+if 'show_rsi' not in st.session_state:
+    st.session_state.show_rsi = False
+if 'chart_period' not in st.session_state:
+    st.session_state.chart_period = "Last 200"
+if 'chart_style' not in st.session_state:
+    st.session_state.chart_style = "Dark"
 
 def main():
     """Main application function"""
@@ -169,11 +190,14 @@ def main():
                 st.exception(e)
     
     # Display results if available
-    if st.session_state.analysis_complete and st.session_state.results:
-        display_results(st.session_state.results)
+    if st.session_state.get('analysis_complete', False):
+        if st.session_state.get('results'):
+            display_results(st.session_state.results)
+        else:
+            st.warning("Analysis completed but no results found. Please run analysis again.")
     else:
         # Minimal welcome hint
-        st.caption("Set tickers and dates in the sidebar, then click ‘Run Analysis’.")
+        st.caption("Set tickers and dates in the sidebar, then click 'Run Analysis'.")
 
 def run_analysis(train_ticker, test_ticker, start_date, end_date, initial_capital, position_size):
     """Run the complete trading strategy analysis"""
@@ -664,28 +688,43 @@ def display_charts(results):
             st.markdown("**Indicators & Overlays**")
             col1, col2, col3, col4, col5 = st.columns(5)
             with col1:
-                show_bb = st.checkbox("Bollinger Bands", value=True)
+                show_bb = st.checkbox("Bollinger Bands", value=st.session_state.show_bb, key="cb_bb")
+                st.session_state.show_bb = show_bb
             with col2:
-                show_ma = st.checkbox("Moving Averages", value=True)
+                show_ma = st.checkbox("Moving Averages", value=st.session_state.show_ma, key="cb_ma")
+                st.session_state.show_ma = show_ma
             with col3:
-                show_swings = st.checkbox("Swing Points", value=True)
+                show_swings = st.checkbox("Swing Points", value=st.session_state.show_swings, key="cb_swings")
+                st.session_state.show_swings = show_swings
             with col4:
-                show_patterns = st.checkbox("Patterns", value=True)
+                show_patterns = st.checkbox("Patterns", value=st.session_state.show_patterns, key="cb_patterns")
+                st.session_state.show_patterns = show_patterns
             with col5:
-                show_signals = st.checkbox("Trade Signals", value=True)
+                show_signals = st.checkbox("Trade Signals", value=st.session_state.show_signals, key="cb_signals")
+                st.session_state.show_signals = show_signals
             
             col6, col7, col8, _, _ = st.columns(5)
             with col6:
-                show_volume = st.checkbox("Volume", value=True)
+                show_volume = st.checkbox("Volume", value=st.session_state.show_volume, key="cb_volume")
+                st.session_state.show_volume = show_volume
             with col7:
-                show_macd = st.checkbox("MACD", value=True)
+                show_macd = st.checkbox("MACD", value=st.session_state.show_macd, key="cb_macd")
+                st.session_state.show_macd = show_macd
             with col8:
-                show_rsi = st.checkbox("RSI", value=True)
+                show_rsi = st.checkbox("RSI", value=st.session_state.show_rsi, key="cb_rsi")
+                st.session_state.show_rsi = show_rsi
         
         with col_right:
             st.markdown("**Display Options**")
-            chart_period = st.selectbox("Timeframe", ["Last 100", "Last 200", "Last 500", "All"], index=1, label_visibility="collapsed")
-            chart_style = st.selectbox("Theme", ["Dark", "Light"], index=0, label_visibility="collapsed")
+            period_options = ["Last 100", "Last 200", "Last 500", "All"]
+            period_index = period_options.index(st.session_state.chart_period) if st.session_state.chart_period in period_options else 1
+            chart_period = st.selectbox("Timeframe", period_options, index=period_index, label_visibility="collapsed", key="sb_period")
+            st.session_state.chart_period = chart_period
+            
+            style_options = ["Dark", "Light"]
+            style_index = style_options.index(st.session_state.chart_style) if st.session_state.chart_style in style_options else 0
+            chart_style = st.selectbox("Theme", style_options, index=style_index, label_visibility="collapsed", key="sb_style")
+            st.session_state.chart_style = chart_style
     
     st.markdown("---")
     
