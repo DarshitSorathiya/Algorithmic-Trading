@@ -46,7 +46,7 @@ INDICATOR_PARAMS = {
 SIGNAL_PARAMS = {
     'swing_window': 5,       # Reduced from 12 for more swing detection (was too restrictive)
     'min_distance': 3,       # Reduced from 10 to allow more frequent trades
-    'lookback_period': 50
+    'lookback_period': 50,
 }
 
 # Backtesting Parameters

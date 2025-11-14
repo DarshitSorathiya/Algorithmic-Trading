@@ -63,6 +63,8 @@ if 'show_bb' not in st.session_state:
     st.session_state.show_bb = False
 if 'show_ma' not in st.session_state:
     st.session_state.show_ma = False
+if 'show_kama' not in st.session_state:
+    st.session_state.show_kama = False
 if 'show_swings' not in st.session_state:
     st.session_state.show_swings = False
 if 'show_patterns' not in st.session_state:
@@ -703,14 +705,17 @@ def display_charts(results):
                 show_signals = st.checkbox("Trade Signals", value=st.session_state.show_signals, key="cb_signals")
                 st.session_state.show_signals = show_signals
             
-            col6, col7, col8, _, _ = st.columns(5)
+            col6, col7, col8, col9, _ = st.columns(5)
             with col6:
+                show_kama = st.checkbox("KAMA", value=st.session_state.show_kama, key="cb_kama")
+                st.session_state.show_kama = show_kama
+            with col7:
                 show_volume = st.checkbox("Volume", value=st.session_state.show_volume, key="cb_volume")
                 st.session_state.show_volume = show_volume
-            with col7:
+            with col8:
                 show_macd = st.checkbox("MACD", value=st.session_state.show_macd, key="cb_macd")
                 st.session_state.show_macd = show_macd
-            with col8:
+            with col9:
                 show_rsi = st.checkbox("RSI", value=st.session_state.show_rsi, key="cb_rsi")
                 st.session_state.show_rsi = show_rsi
         
@@ -737,7 +742,7 @@ def display_charts(results):
         'sma_long': 50,
         'ema_short': 20,
         'ema_long': 50,
-        'kama': 100
+        'kama': 200
     })
     
     with tab1:
@@ -745,7 +750,7 @@ def display_charts(results):
             results['df_train'], 
             results['train_ticker'],
             show_volume, show_macd, show_rsi, 
-            show_bb, show_ma, show_swings, show_patterns, show_signals,
+            show_bb, show_ma, show_kama, show_swings, show_patterns, show_signals,
             chart_period, chart_style, ma_config
         )
     
@@ -754,13 +759,13 @@ def display_charts(results):
             results['df_test'], 
             results['test_ticker'],
             show_volume, show_macd, show_rsi,
-            show_bb, show_ma, show_swings, show_patterns, show_signals,
+            show_bb, show_ma, show_kama, show_swings, show_patterns, show_signals,
             chart_period, chart_style, ma_config
         )
 
 def create_advanced_tradingview_chart(df, ticker, 
                                      show_volume, show_macd, show_rsi,
-                                     show_bb, show_ma, show_swings, show_patterns, show_signals,
+                                     show_bb, show_ma, show_kama, show_swings, show_patterns, show_signals,
                                      period, style, ma_config=None):
     """Create advanced TradingView-style chart"""
     
@@ -782,6 +787,7 @@ def create_advanced_tradingview_chart(df, ticker,
         show_rsi=show_rsi,
         show_bollinger=show_bb,
         show_moving_avg=show_ma,
+        show_kama=show_kama,
         show_swing_points=show_swings,
         show_patterns=show_patterns,
         show_trade_signals=show_signals,

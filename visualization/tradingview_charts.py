@@ -27,6 +27,7 @@ class TradingViewChart:
         self.show_patterns = False  # Default to hiding patterns
         self.show_bollinger = False
         self.show_moving_avg = False
+        self.show_kama = False
         self.show_swing_points = False
         self.show_trade_signals = False
         
@@ -91,6 +92,7 @@ class TradingViewChart:
         self._add_candlestick(current_row)
         self._add_bollinger_bands(current_row)
         self._add_moving_averages(current_row)
+        self._add_kama(current_row)
         self._add_swing_points(current_row)
         self._add_candlestick_patterns(current_row)  # Add pattern markers
         self._add_trade_signals(current_row)
@@ -188,16 +190,6 @@ class TradingViewChart:
         # Dynamic MA configuration based on settings
         ma_columns = {}
         
-        # KAMA
-        kama_col = f'KAMA_{self.ma_config["kama"]}'
-        if kama_col in self.df.columns:
-            ma_columns[kama_col] = dict(
-                color='rgba(255, 152, 0, 0.8)', 
-                width=2, 
-                name=f'KAMA {self.ma_config["kama"]}',
-                legendgroup='ma'
-            )
-        
         # SMA Long
         sma_long_col = f'SMA_{self.ma_config["sma_long"]}'
         if sma_long_col in self.df.columns:
@@ -248,6 +240,25 @@ class TradingViewChart:
                     line=dict(color=style['color'], width=style['width']),
                     showlegend=True,
                     legendgroup=style.get('legendgroup', '')
+                ),
+                row=row, col=1
+            )
+    
+    def _add_kama(self, row: int):
+        """Add KAMA (Kaufman Adaptive Moving Average) if available"""
+        if not self.show_kama:
+            return
+        
+        kama_col = f'KAMA_{self.ma_config["kama"]}'
+        if kama_col in self.df.columns:
+            self.fig.add_trace(
+                go.Scatter(
+                    x=self.df.index,
+                    y=self.df[kama_col],
+                    name=f'KAMA {self.ma_config["kama"]}',
+                    line=dict(color='rgba(255, 152, 0, 0.8)', width=2),
+                    showlegend=True,
+                    legendgroup='kama'
                 ),
                 row=row, col=1
             )
@@ -645,6 +656,7 @@ def create_advanced_chart(df: pd.DataFrame,
                          show_rsi: bool = False,
                          show_bollinger: bool = False,
                          show_moving_avg: bool = False,
+                         show_kama: bool = False,
                          show_swing_points: bool = False,
                          show_patterns: bool = False,
                          show_trade_signals: bool = False,
@@ -659,7 +671,8 @@ def create_advanced_chart(df: pd.DataFrame,
         show_macd: Show MACD subplot
         show_rsi: Show RSI subplot
         show_bollinger: Show Bollinger Bands on main chart
-        show_moving_avg: Show moving averages on main chart
+        show_moving_avg: Show moving averages on main chart (SMA/EMA)
+        show_kama: Show KAMA (Kaufman Adaptive Moving Average)
         show_swing_points: Show swing high/low markers
         show_patterns: Show candlestick pattern markers
         show_trade_signals: Show buy/sell signal arrows
@@ -673,6 +686,7 @@ def create_advanced_chart(df: pd.DataFrame,
     chart.show_patterns = show_patterns
     chart.show_bollinger = show_bollinger
     chart.show_moving_avg = show_moving_avg
+    chart.show_kama = show_kama
     chart.show_swing_points = show_swing_points
     chart.show_trade_signals = show_trade_signals
     
