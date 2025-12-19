@@ -59,45 +59,6 @@ class TechnicalIndicators:
         return macd_line, signal_line, histogram
     
     @staticmethod
-    def calculate_kama(df: pd.DataFrame, period: int = 200, 
-                       fast_ema: int = 2, slow_ema: int = 30) -> pd.Series:
-        """
-        Calculate Kaufman Adaptive Moving Average
-        
-        Args:
-            df: DataFrame with Close prices
-            period: Lookback period
-            fast_ema: Fast EMA period
-            slow_ema: Slow EMA period
-            
-        Returns:
-            KAMA series
-        """
-        close = df['Close'].values
-        kama = np.zeros(len(close))
-        kama[0] = float(close[0])
-        
-        fastest = 2.0 / (fast_ema + 1)
-        slowest = 2.0 / (slow_ema + 1)
-        
-        for i in range(1, len(close)):
-            if i < period:
-                kama[i] = float(close[i])
-            else:
-                change = abs(close[i] - close[i - period])
-                volatility = np.sum(np.abs(np.diff(close[i - period:i + 1])))
-                
-                if volatility != 0:
-                    er = change / volatility
-                else:
-                    er = 0
-                    
-                sc = (er * (fastest - slowest) + slowest) ** 2
-                kama[i] = float(kama[i - 1] + sc * (close[i] - kama[i - 1]))
-        
-        return pd.Series(kama, index=df.index)
-    
-    @staticmethod
     def calculate_bollinger_bands(df: pd.DataFrame, period: int = 20, 
                                    std_dev: int = 2) -> tuple:
         """
@@ -220,16 +181,6 @@ class TechnicalIndicators:
             fast=macd_params.get('fast', 12),
             slow=macd_params.get('slow', 26),
             signal=macd_params.get('signal', 9)
-        )
-        
-        # KAMA
-        kama_params = params.get('kama', {})
-        kama_period = kama_params.get('period', 200)
-        df[f'KAMA_{kama_period}'] = TechnicalIndicators.calculate_kama(
-            df,
-            period=kama_period,
-            fast_ema=kama_params.get('fast_ema', 2),
-            slow_ema=kama_params.get('slow_ema', 30)
         )
         
         # Additional Moving Averages - Dynamic periods

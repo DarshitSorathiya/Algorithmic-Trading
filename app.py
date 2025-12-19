@@ -63,8 +63,6 @@ if 'show_bb' not in st.session_state:
     st.session_state.show_bb = False
 if 'show_ma' not in st.session_state:
     st.session_state.show_ma = False
-if 'show_kama' not in st.session_state:
-    st.session_state.show_kama = False
 if 'show_swings' not in st.session_state:
     st.session_state.show_swings = False
 if 'show_patterns' not in st.session_state:
@@ -155,7 +153,6 @@ def main():
             with col_ma2:
                 ema_short = st.number_input("EMA Short", value=20, min_value=5, max_value=100)
                 ema_long = st.number_input("EMA Long", value=50, min_value=20, max_value=200)
-            kama_period = st.number_input("KAMA", value=200, min_value=50, max_value=200)
             
             st.write("**Signals**")
             swing_order = st.slider("Swing Order", 1, 10, 5)
@@ -175,8 +172,7 @@ def main():
                     'sma_short': sma_short,
                     'sma_long': sma_long,
                     'ema_short': ema_short,
-                    'ema_long': ema_long,
-                    'kama': kama_period
+                    'ema_long': ema_long
                 }
                 
                 results = run_analysis(
@@ -225,7 +221,6 @@ def run_analysis(train_ticker, test_ticker, start_date, end_date, initial_capita
             'ema_short': ma_config['ema_short'],
             'ema_long': ma_config['ema_long']
         }
-        INDICATOR_PARAMS['kama']['period'] = ma_config['kama']
     
     # Process training ticker
     st.write(f"### Processing {train_ticker}...")
@@ -705,17 +700,14 @@ def display_charts(results):
                 show_signals = st.checkbox("Trade Signals", value=st.session_state.show_signals, key="cb_signals")
                 st.session_state.show_signals = show_signals
             
-            col6, col7, col8, col9, _ = st.columns(5)
+            col6, col7, col8, _, _ = st.columns(5)
             with col6:
-                show_kama = st.checkbox("KAMA", value=st.session_state.show_kama, key="cb_kama")
-                st.session_state.show_kama = show_kama
-            with col7:
                 show_volume = st.checkbox("Volume", value=st.session_state.show_volume, key="cb_volume")
                 st.session_state.show_volume = show_volume
-            with col8:
+            with col7:
                 show_macd = st.checkbox("MACD", value=st.session_state.show_macd, key="cb_macd")
                 st.session_state.show_macd = show_macd
-            with col9:
+            with col8:
                 show_rsi = st.checkbox("RSI", value=st.session_state.show_rsi, key="cb_rsi")
                 st.session_state.show_rsi = show_rsi
         
@@ -741,8 +733,7 @@ def display_charts(results):
         'sma_short': 20,
         'sma_long': 50,
         'ema_short': 20,
-        'ema_long': 50,
-        'kama': 200
+        'ema_long': 50
     })
     
     with tab1:
@@ -750,7 +741,7 @@ def display_charts(results):
             results['df_train'], 
             results['train_ticker'],
             show_volume, show_macd, show_rsi, 
-            show_bb, show_ma, show_kama, show_swings, show_patterns, show_signals,
+            show_bb, show_ma, show_swings, show_patterns, show_signals,
             chart_period, chart_style, ma_config
         )
     
@@ -759,13 +750,13 @@ def display_charts(results):
             results['df_test'], 
             results['test_ticker'],
             show_volume, show_macd, show_rsi,
-            show_bb, show_ma, show_kama, show_swings, show_patterns, show_signals,
+            show_bb, show_ma, show_swings, show_patterns, show_signals,
             chart_period, chart_style, ma_config
         )
 
 def create_advanced_tradingview_chart(df, ticker, 
                                      show_volume, show_macd, show_rsi,
-                                     show_bb, show_ma, show_kama, show_swings, show_patterns, show_signals,
+                                     show_bb, show_ma, show_swings, show_patterns, show_signals,
                                      period, style, ma_config=None):
     """Create advanced TradingView-style chart"""
     
@@ -787,7 +778,6 @@ def create_advanced_tradingview_chart(df, ticker,
         show_rsi=show_rsi,
         show_bollinger=show_bb,
         show_moving_avg=show_ma,
-        show_kama=show_kama,
         show_swing_points=show_swings,
         show_patterns=show_patterns,
         show_trade_signals=show_signals,
@@ -1070,8 +1060,6 @@ def display_tech_details(df, ticker):
             st.metric("BB Lower", f"${latest['BB_Lower']:.2f}")
     
     with col4:
-        if 'KAMA' in df.columns:
-            st.metric("KAMA", f"${latest['KAMA']:.2f}")
         st.metric("Volume", f"{latest['Volume']:,.0f}")
     
     # Signal summary

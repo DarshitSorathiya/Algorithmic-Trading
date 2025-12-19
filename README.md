@@ -19,20 +19,19 @@ Then open your browser to `http://localhost:8501` and enjoy the interactive UI! 
 .\.venv\Scripts\python.exe main.py --train-ticker GOOGL --test-ticker AMZN
 ```
 
-
 ## 🎯 Features
 
 ### 🌐 Interactive Web Interface
 
 - **Streamlit UI**: Clean, professional web interface with real-time controls
-- **Configurable Moving Averages**: Customize KAMA, SMA, and EMA periods dynamically
+- **Configurable Moving Averages**: Customize SMA and EMA periods dynamically
 - **TradingView-Style Charts**: Professional candlestick charts with multiple indicators
 - **Chart Controls**: Toggle 8+ indicators/overlays (Volume, RSI, MACD, Bollinger Bands, Support/Resistance, etc.)
 - **Live Updates**: Real-time chart updates based on configuration changes
 
 ### 📊 Technical Analysis
 
-- **Moving Averages**: KAMA, SMA (short/long), EMA (short/long) - all user-configurable
+- **Moving Averages**: SMA (short/long), EMA (short/long) - all user-configurable
 - **Momentum Indicators**: MACD, RSI, ATR
 - **Volatility Indicators**: Bollinger Bands
 - **Pattern Detection**: Doji, Hammer, Shooting Star, Engulfing patterns
@@ -91,7 +90,7 @@ trading_strategy/
 │
 ├── indicators/
 │   ├── __init__.py
-│   ├── technical.py               # Technical indicators (MACD, RSI, BB, KAMA, etc.)
+│   ├── technical.py               # Technical indicators (MACD, RSI, BB, etc.)
 │   ├── patterns.py                # Candlestick pattern detection
 │   └── __pycache__/
 │
@@ -211,7 +210,7 @@ python main.py --help
 - Select training and testing tickers
 - Configure date ranges
 - Set initial capital and position size
-- Customize 5 moving average periods (KAMA, SMA short/long, EMA short/long)
+- Customize 4 moving average periods (SMA short/long, EMA short/long)
 
 **Chart Controls:**
 

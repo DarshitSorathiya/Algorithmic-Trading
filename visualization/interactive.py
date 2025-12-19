@@ -81,12 +81,6 @@ class InteractiveVisualizer:
             fill='tonexty', fillcolor='rgba(250, 128, 114, 0.1)'
         ), row=1, col=1)
         
-        # KAMA
-        fig.add_trace(go.Scatter(
-            x=df_plot.index, y=df_plot['KAMA'],
-            name='KAMA', line=dict(color='purple', width=2)
-        ), row=1, col=1)
-        
         # Buy Signals
         buy_signals = df_plot[df_plot['Signal'] == 1]
         fig.add_trace(go.Scatter(

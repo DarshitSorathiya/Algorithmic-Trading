@@ -19,11 +19,6 @@ INDICATOR_PARAMS = {
         'slow': 26,
         'signal': 9
     },
-    'kama': {
-        'period': 200,
-        'fast_ema': 2,
-        'slow_ema': 30
-    },
     'moving_averages': {
         'sma_short': 20,
         'sma_long': 50,
